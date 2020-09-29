@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:api/HomePage.dart';
+import 'package:api/Post.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -37,11 +37,17 @@ class _LoginState extends State<Login> {
       if(users[i].id.toString() == myController.text){
         Navigator.push(context,
          MaterialPageRoute(builder: (context) => HomePage(user:users[i])));
+         saveUserLogin(i);
+        loginToast("Logged In Successfuly");
+
       }
     }
   }
-
-  login() async {
+  saveUserLogin(int i) async{
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setInt("Id",users[i].id);
+  }
+   login() async {
     print('users api called');
     final response = await http.get("https://jsonplaceholder.typicode.com/users",);
     final data = jsonDecode(response.body);
@@ -50,70 +56,20 @@ class _LoginState extends State<Login> {
       User user = User.fromJson(u);
       users.add(user);
     }
-    // if (value == 1) {
-    //   setState(() {
-    //     _loginStatus = LoginStatus.signIn;
-    //     savePref(value, emailAPI, nameAPI, id);
-    //   });
-    //   print(message);
-    //   loginToast(message);
-    // } else {
-    //   print("fail");
-    //   print(message);
-    //   loginToast(message);
-    // }
+
+
+
+
+
+
   }
 
-  loginToast(String toast) {
-    return Fluttertoast.showToast(
-        msg: toast,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIos: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white);
-  }
 
-  savePref(int value, String email, String name, String id) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    setState(() {
-      preferences.setInt("value", value);
-      preferences.setString("name", name);
-      preferences.setString("email", email);
-      preferences.setString("id", id);
-      preferences.commit();
-    });
-  }
-
-  var value;
-
-  getPref() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    setState(() {
-      value = preferences.getInt("value");
-
-      _loginStatus = value == 1 ? LoginStatus.signIn : LoginStatus.notSignIn;
-    });
-  }
-
-  signOut() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    setState(() {
-      preferences.setInt("value", null);
-      preferences.setString("name", null);
-      preferences.setString("email", null);
-      preferences.setString("id", null);
-
-      preferences.commit();
-      _loginStatus = LoginStatus.notSignIn;
-    });
-  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getPref();
     login();
   }
 
@@ -181,9 +137,13 @@ class _LoginState extends State<Login> {
                           Card(
                             elevation: 6.0,
                             child: TextFormField(
-                              validator: (e) {
-                                if (e.isEmpty) {
-                                  return "Password Can't be Empty";
+                              validator: (value) {
+
+                                if (value.isEmpty) {
+                                  return 'Please enter some text';
+                                }
+                                if (value.length < 3) {
+                                  return 'Must be more than 2 charater';
                                 }
                               },
                               obscureText: _secureText,
@@ -255,10 +215,22 @@ class _LoginState extends State<Login> {
             ),
           ),
         );
-        break;
+
+
 
 
     }
+
+  }
+
+  loginToast(String toast) {
+    return Fluttertoast.showToast(
+        msg: toast,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white);
   }
 }
 
