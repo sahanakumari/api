@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Login.dart';
+import 'SinglePostFeed.dart';
 
 class HomePage extends StatefulWidget {
   User user;
@@ -23,6 +24,7 @@ class HomePage extends StatefulWidget {
 class _MyHomePageState extends State<HomePage> {
   List<postfeed> post = new List();
   int loginedUserId;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -33,13 +35,14 @@ class _MyHomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(backgroundColor: Colors.white,
-      appBar: AppBar(centerTitle: true,
-       title:  Text(
-         "Post Feeds",
-         textAlign: TextAlign.center,
-       )
-      ),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+          centerTitle: true,
+          title: Text(
+            "Post Feeds",
+            textAlign: TextAlign.center,
+          )),
       drawer: new Drawer(
         child: new Column(
           children: <Widget>[
@@ -61,31 +64,25 @@ class _MyHomePageState extends State<HomePage> {
               child: ListView(
                 children: <Widget>[
                   MenuOption(
-
                     label: 'Post Feed',
                     icon: Icons.update,
                     ontap: () {},
                   ),
-
                   MenuOption(
                     label: 'Friends',
                     icon: Icons.people,
                     ontap: () {},
                   ),
-
                   MenuOption(
                     label: 'Profile',
                     icon: Icons.account_circle,
-
-                    // ontap: () {
-                    //   Navigator.push(context,
-                    //       MaterialPageRoute(builder: (contex) => new Cart()));
-                    //},
-
                     ontap: () {},
                   ),
-                  Divider(height: 150.0, thickness: 0.5, color: Colors.grey,),
-
+                  Divider(
+                    height: 150.0,
+                    thickness: 0.5,
+                    color: Colors.grey,
+                  ),
                   MenuOption(
                     label: 'Log Out',
                     ontap: () {
@@ -101,47 +98,49 @@ class _MyHomePageState extends State<HomePage> {
             ),
           ],
         ),
-
       ),
-
-
       body: Column(
-
         children: <Widget>[
 //          Text("Welcome back " + widget.user.name + "!"),
 //          Text("Your Email is  " + widget.user.email)
-          post == null?
-
-        Container :Container(
+          post == null
+              ? Container
+              : Container(
 //             height: 40.0,
-                 height: MediaQuery.of(context).size.height-85,
-         child: ListView.builder(
-              itemCount: post.length,
-              itemBuilder: (BuildContext context,int index){
-                return GestureDetector(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(height: 70,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                           color: getColorBasedOnUserPost(post,index),
-                      ),
-                      child:Padding(padding: EdgeInsets.all(8.0),
-                          child:Text(post[index].title,style: TextStyle(fontSize: 16),)),
-                    ),
-                  ),
+                  height: MediaQuery.of(context).size.height - 85,
+                  child: ListView.builder(
+                      itemCount: post.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return GestureDetector(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              height: 70,
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0)),
+                                color: getColorBasedOnUserPost(post, index),
+                              ),
+                              child: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Text(
+                                    post[index].title,
+                                    style: TextStyle(fontSize: 16),
+                                  )),
+                            ),
+                          ),
+                          onTap: () {
+                          //  Navigator.push(context,MaterialPageRoute(builder: (context)=> new SinglePostFeed()));
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => SinglePostFeed(userloginid: loginedUserId,post:post[index])),);
 
-                  onTap: (){
-                    ///Navigation
-                  },
-                );
-              }),
-
-
-        ),
-
-    ],
-    ),
+                          },
+                        );
+                      }),
+                ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // Add your onPressed code here!
@@ -153,8 +152,6 @@ class _MyHomePageState extends State<HomePage> {
         backgroundColor: Colors.blueAccent,
       ),
     );
-
-
   }
 
   logoutToast(String toast) {
@@ -166,20 +163,23 @@ class _MyHomePageState extends State<HomePage> {
         backgroundColor: Colors.green,
         textColor: Colors.white);
   }
-   getSharedUserValues()async {
-     SharedPreferences preferences = await SharedPreferences.getInstance();
-     int userId = preferences.getInt("Id");
-     loginedUserId = userId;
-     print('user id $userId');
-   }
-  Color getColorBasedOnUserPost(List<postfeed> post, int index){
-    if(post[index].userId==loginedUserId){
-       return Colors.greenAccent;
-    }else{
+
+  getSharedUserValues() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    int userId = preferences.getInt("Id");
+    loginedUserId = userId;
+    print('user id $userId');
+  }
+
+  Color getColorBasedOnUserPost(List<postfeed> post, int index) {
+    if (post[index].userId == loginedUserId) {
+      return Colors.greenAccent;
+    } else {
       ///friends post
-      if(post[index].userId==loginedUserId-1 || post[index].userId==loginedUserId+1){
+      if (post[index].userId == loginedUserId - 1 ||
+          post[index].userId == loginedUserId + 1) {
         return Colors.blue;
-      }else{
+      } else {
         ///remaing people
         return Colors.red;
       }
@@ -188,27 +188,23 @@ class _MyHomePageState extends State<HomePage> {
 
   getPostLists() async {
     print('users post called');
-    final response = await http.get("https://jsonplaceholder.typicode.com/posts",);
+    final response = await http.get(
+      "https://jsonplaceholder.typicode.com/posts",
+    );
     final data = jsonDecode(response.body);
     print('ApI data $data');
-      for (Map<String, dynamic> u in data) {
-        postfeed posts = postfeed.fromJson(u);
-        post.add(posts);
-      }
-      setState(() {
-
-      });
+    for (Map<String, dynamic> u in data) {
+      postfeed posts = postfeed.fromJson(u);
+      post.add(posts);
     }
+    setState(() {});
+  }
 
-  void clearSharedPrefrences() async{
-
+  void clearSharedPrefrences() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-     preferences.remove("Id");
-    Navigator.pushReplacement(context,
-        MaterialPageRoute(builder: (BuildContext ctx) => Login()));
-
-
-
+    preferences.remove("Id");
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (BuildContext ctx) => Login()));
   }
 }
 

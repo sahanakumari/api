@@ -15,10 +15,10 @@ class Login extends StatefulWidget {
   _LoginState createState() => _LoginState();
 }
 
-enum LoginStatus { notSignIn, signIn }
+
 
 class _LoginState extends State<Login> {
-  LoginStatus _loginStatus = LoginStatus.notSignIn;
+
   String id, password;
   final _key = new GlobalKey<FormState>();
   bool _secureText = true;
@@ -75,8 +75,7 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    switch (_loginStatus) {
-      case LoginStatus.notSignIn:
+
         return Scaffold(
           backgroundColor: Colors.black,
           body: Center(
@@ -232,7 +231,7 @@ class _LoginState extends State<Login> {
         backgroundColor: Colors.green,
         textColor: Colors.white);
   }
-}
+
 
 
 
