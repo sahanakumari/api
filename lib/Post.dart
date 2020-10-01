@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:api/MyDrawer.dart';
 import 'package:api/model/User.dart';
 import 'package:api/model/postfeed.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,7 @@ import 'Login.dart';
 import 'SinglePostFeed.dart';
 
 class HomePage extends StatefulWidget {
-  User user;
+  final User user;
 
   HomePage({Key key, this.title, this.user}) : super(key: key);
   final String title;
@@ -43,62 +44,63 @@ class _MyHomePageState extends State<HomePage> {
             "Post Feeds",
             textAlign: TextAlign.center,
           )),
-      drawer: new Drawer(
-        child: new Column(
-          children: <Widget>[
-//            header
-            new UserAccountsDrawerHeader(
-              accountName: Text(widget.user.name),
-              currentAccountPicture: GestureDetector(
-                child: new CircleAvatar(
-                  backgroundColor: Colors.blue,
-                  child: Icon(
-                    Icons.person_outline,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              decoration: new BoxDecoration(color: Colors.red.shade900),
-            ),
-            Expanded(
-              child: ListView(
-                children: <Widget>[
-                  MenuOption(
-                    label: 'Post Feed',
-                    icon: Icons.update,
-                    ontap: () {},
-                  ),
-                  MenuOption(
-                    label: 'Friends',
-                    icon: Icons.people,
-                    ontap: () {},
-                  ),
-                  MenuOption(
-                    label: 'Profile',
-                    icon: Icons.account_circle,
-                    ontap: () {},
-                  ),
-                  Divider(
-                    height: 150.0,
-                    thickness: 0.5,
-                    color: Colors.grey,
-                  ),
-                  MenuOption(
-                    label: 'Log Out',
-                    ontap: () {
-                      logoutToast("Logged Out Successfuly");
-                      clearSharedPrefrences();
-                      Navigator.of(context).pop();
-                    },
-                    icon: Icons.transit_enterexit,
-                    color: Colors.green,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
+         drawer: MyDrawer(widget.user),
+//       drawer: new Drawer(
+//         child: new Column(
+//           children: <Widget>[
+// //            header
+//             new UserAccountsDrawerHeader(
+//               accountName: Text(widget.user.name),
+//               currentAccountPicture: GestureDetector(
+//                 child: new CircleAvatar(
+//                   backgroundColor: Colors.blue,
+//                   child: Icon(
+//                     Icons.person_outline,
+//                     color: Colors.white,
+//                   ),
+//                 ),
+//               ),
+//               decoration: new BoxDecoration(color: Colors.red.shade900),
+//             ),
+//             Expanded(
+//               child: ListView(
+//                 children: <Widget>[
+//                   MenuOption(
+//                     label: 'Post Feed',
+//                     icon: Icons.update,
+//                     ontap: () {},
+//                   ),
+//                   MenuOption(
+//                     label: 'Friends',
+//                     icon: Icons.people,
+//                     ontap: () {},
+//                   ),
+//                   MenuOption(
+//                     label: 'Profile',
+//                     icon: Icons.account_circle,
+//                     ontap: () {},
+//                   ),
+//                   Divider(
+//                     height: 150.0,
+//                     thickness: 0.5,
+//                     color: Colors.grey,
+//                   ),
+//                   MenuOption(
+//                     label: 'Log Out',
+//                     ontap: () {
+//                       logoutToast("Logged Out Successfuly");
+//                       clearSharedPrefrences();
+//                       Navigator.of(context).pop();
+//                     },
+//                     icon: Icons.transit_enterexit,
+//                     color: Colors.green,
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
       body: Column(
         children: <Widget>[
 //          Text("Welcome back " + widget.user.name + "!"),

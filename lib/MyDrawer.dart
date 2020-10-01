@@ -4,8 +4,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'Login.dart';
 import 'model/User.dart';
 
+
 class MyDrawer extends StatefulWidget {
-  User user;
+  final   User user;
+
+  MyDrawer(this.user);
+
   @override
   _MyDrawerState createState() => _MyDrawerState();
 }

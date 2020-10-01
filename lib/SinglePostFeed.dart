@@ -209,9 +209,7 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
 
   getComments() async {
     print('users comment called');
-    final response = await http.get(
-      "http://jsonplaceholder.typicode.com/comments",
-    );
+    final response = await http.get("http://jsonplaceholder.typicode.com/comments?postId=${widget.post.id}",);
     final data = jsonDecode(response.body);
     print('ApI data $data');
     for (Map<String, dynamic> u in data) {
