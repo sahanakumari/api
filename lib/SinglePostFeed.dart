@@ -1,20 +1,23 @@
 import 'dart:convert';
 
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Login.dart';
+import 'MyDrawer.dart';
 import 'model/Comments.dart';
 import 'model/User.dart';
 import 'model/postfeed.dart';
 
 class SinglePostFeed extends StatefulWidget {
-  User user;
+  final User user;
   postfeed post;
   int index;
   int userloginid;
+
 
   SinglePostFeed({Key key, this.user, this.post, this.userloginid})
       : super(key: key);
@@ -27,7 +30,7 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
   List<Comments> comments = new List();
 
   //get index => null;
-
+  bool showUserName = false;
   @override
   void initState() {
     // TODO: implement initState
@@ -51,8 +54,13 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
                 Icons.delete,
                 color: Colors.white,
               ),
-              onPressed: () {},
+              onPressed: () {
+                deleteComments();
+                },
             ),
+          ],
+      ),
+      drawer: MyDrawer(widget.user),
 
 //       drawer: new Drawer(
 //         child: new Column(
@@ -110,7 +118,7 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
 //           ],
 //         ),
 //
-          ]),
+
       body: widget.post != null
           ? Column(
               children: <Widget>[
@@ -119,16 +127,26 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    RaisedButton(
-                      onPressed: () {},
-                      child: Text('View user'),
-                    ),
+                    Column(children: [
+                      RaisedButton(
+                        onPressed: () {
+                          print(widget.post.userId);
+                          showUserName=!showUserName;
+                        },
+                        child: Text('View user'),
+                      ),
+                      Visibility(visible: showUserName,
+                    //  Text("Your Email is  " + widget.user.email)
+                        child: Text('${widget.post.userId  }' + " is the user  ")  ),
+
+                    ],),
                     RaisedButton(
                       onPressed: () {},
                       child: Text('Comment'),
                     ),
                   ],
                 ),
+
                 Text('Comments'),
                 comments.length > 0
                     ? Container(
@@ -139,7 +157,7 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
                             itemBuilder: (BuildContext context, int index) {
                               return GestureDetector(
                                 child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.all(10.0),
                                   child: Container(
                                     height: 70,
                                     decoration: BoxDecoration(
@@ -148,37 +166,25 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
                                         color: Colors.black12),
                                     child: Padding(
                                         padding: EdgeInsets.all(8.0),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                        child: Column(
                                           children: [
-                                            Container(
+                                            Padding(padding: EdgeInsets.all(8.0),
+                                              child: Container(
                                               child: Text(
-                                                comments[index].body,
+                                                comments[index].name,
                                                 style: TextStyle(fontSize: 16),
                                               ),
-
-                                              width: 200,
-
-                                            ),
-                                            // Row(mainAxisAlignment: MainAxisAlignment.start,
+                                            ),),
+                                            // Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
                                             //   children: [
                                             //     RaisedButton(onPressed: () {  },
-                                            //       child: Text('View user'),),
-                                            //     RaisedButton(onPressed: () {  },
+                                            //       child: Text('user'),),
+                                            //     RaisedButton(onPressed: () {
+                                            //       deleteComments();
+                                            //     },
                                             //       child: Text('Delete'),),
-                                            //
-                                            //
                                             //   ],),
-
-
-                                            widget.userloginid ==
-                                                    comments[index].id
-                                                ? RaisedButton(
-                                                    child: Text("delete"),
-                                                  )
-                                               : Container()
-                                          ],
+                                                                              ],
                                         ),
 
 
@@ -217,6 +223,19 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
       comments.add(comm);
     }
     setState(() {});
+  }
+  deleteComments() async {
+    final response = await http.delete("https://jsonplaceholder.typicode.com/posts/${widget.userloginid}",);
+    final data = jsonDecode(response.body);
+    if(response.statusCode == 200){
+      //show the toast mesagge sucess
+     // logoutToast('Deleted${response.statusCode}');
+      logoutToast('Sucessfully deleted the comment');
+    }else{
+      //failure case
+      logoutToast('Failed to delete the comment... try again');
+    }
+    print('ApI data $data');
   }
 
   clearSharedPrefrences() async {

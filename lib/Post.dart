@@ -25,6 +25,7 @@ class HomePage extends StatefulWidget {
 class _MyHomePageState extends State<HomePage> {
   List<postfeed> post = new List();
   int loginedUserId;
+  String username;
 
   @override
   void initState() {
@@ -133,6 +134,7 @@ class _MyHomePageState extends State<HomePage> {
                           ),
                           onTap: () {
                           //  Navigator.push(context,MaterialPageRoute(builder: (context)=> new SinglePostFeed()));
+                            print(post[index].userId);
                             Navigator.push(
                               context,
                               MaterialPageRoute(builder: (context) => SinglePostFeed(userloginid: loginedUserId,post:post[index])),);
