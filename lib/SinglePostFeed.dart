@@ -150,6 +150,7 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
               children: <Widget>[
                 Expanded(
                     child: MaterialButton(
+
                       child: Text("view user",),
                       onPressed: () {
                         showDialog(
@@ -171,7 +172,7 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
                             });
                       },
                       color: Colors.white,
-                      textColor: Colors.grey,
+                      textColor: Colors.black,
                       elevation: 0.2,
 
                     )),
