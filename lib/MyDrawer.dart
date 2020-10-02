@@ -80,6 +80,7 @@ class _MyDrawerState extends State<MyDrawer> {
     preferences.remove("Id");
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (BuildContext ctx) => Login()));
+    Navigator.pop(context);
   }
 
 

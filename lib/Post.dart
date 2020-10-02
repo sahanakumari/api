@@ -15,6 +15,7 @@ import 'SinglePostFeed.dart';
 class HomePage extends StatefulWidget {
   final User user;
 
+
   HomePage({Key key, this.title, this.user}) : super(key: key);
   final String title;
 
@@ -25,7 +26,13 @@ class HomePage extends StatefulWidget {
 class _MyHomePageState extends State<HomePage> {
   List<postfeed> post = new List();
   int loginedUserId;
-  String username;
+
+
+
+
+
+
+
 
   @override
   void initState() {
@@ -45,7 +52,7 @@ class _MyHomePageState extends State<HomePage> {
             "Post Feeds",
             textAlign: TextAlign.center,
           )),
-         drawer: MyDrawer(widget.user),
+      drawer: MyDrawer(widget.user),
 //       drawer: new Drawer(
 //         child: new Column(
 //           children: <Widget>[
@@ -107,47 +114,47 @@ class _MyHomePageState extends State<HomePage> {
 //          Text("Welcome back " + widget.user.name + "!"),
 //          Text("Your Email is  " + widget.user.email)
           post == null
-              ? Container
-              : Container(
+              ? Container : Container(
 //             height: 40.0,
-                  height: MediaQuery.of(context).size.height - 85,
-                  child: ListView.builder(
-                      itemCount: post.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return GestureDetector(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              height: 70,
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0)),
-                                color: getColorBasedOnUserPost(post, index),
-                              ),
-                              child: Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Text(
-                                    post[index].title,
-                                    style: TextStyle(fontSize: 16),
-                                  )),
-                            ),
-                          ),
-                          onTap: () {
-                          //  Navigator.push(context,MaterialPageRoute(builder: (context)=> new SinglePostFeed()));
-                            print(post[index].userId);
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => SinglePostFeed(userloginid: loginedUserId,post:post[index])),);
+            height: MediaQuery.of(context).size.height - 85,
+            child: ListView.builder(
+                itemCount: post.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return GestureDetector(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        height: 70,
+                        decoration: BoxDecoration(
+                          borderRadius:
+                          BorderRadius.all(Radius.circular(10.0)),
+                          color: getColorBasedOnUserPost(post, index),
+                        ),
+                        child: Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text(
+                              post[index].title,
+                              style: TextStyle(fontSize: 16),
+                            )),
+                      ),
+                    ),
+                    onTap: () {
+                      //  Navigator.push(context,MaterialPageRoute(builder: (context)=> new SinglePostFeed()));
+                      print(post[index].userId);
 
-                          },
-                        );
-                      }),
-                ),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SinglePostFeed(userloginid: loginedUserId, user:widget.user,post:post[index])),);
+
+                    },
+                  );
+                }),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Add your onPressed code here!
+
         },
         child: Icon(
           Icons.add,
@@ -204,37 +211,6 @@ class _MyHomePageState extends State<HomePage> {
     setState(() {});
   }
 
-  void clearSharedPrefrences() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.remove("Id");
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (BuildContext ctx) => Login()));
-  }
 }
 
-class MenuOption extends StatelessWidget {
-  final String label;
-  final void Function() ontap;
-  final IconData icon;
-  final Color color;
 
-  MenuOption(
-      {@required this.label,
-      @required this.ontap,
-      @required this.icon,
-      this.color = Colors.blue});
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: ontap,
-      child: ListTile(
-        title: Text(label),
-        leading: Icon(
-          icon,
-          color: color,
-        ),
-      ),
-    );
-  }
-}

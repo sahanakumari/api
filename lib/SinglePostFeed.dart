@@ -29,8 +29,9 @@ class SinglePostFeed extends StatefulWidget {
 class _SinglePostFeedState extends State<SinglePostFeed> {
   List<Comments> comments = new List();
 
-  //get index => null;
+
   bool showUserName = false;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -41,13 +42,12 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
           centerTitle: true,
           title: Text(
             "Post",
-            textAlign: TextAlign.center,
-          ), //
+            textAlign: TextAlign.center,),
           actions: <Widget>[
             new IconButton(
               icon: Icon(
@@ -56,11 +56,11 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
               ),
               onPressed: () {
                 deleteComments();
-                },
+              },
             ),
           ],
-      ),
-      drawer: MyDrawer(widget.user),
+        ),
+        drawer: MyDrawer(widget.user),
 
 //       drawer: new Drawer(
 //         child: new Column(
@@ -119,87 +119,137 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
 //         ),
 //
 
-      body: widget.post != null
-          ? Column(
+        body: widget.post != null
+            ? Column(
+          children: <Widget>[
+            Text(widget.post.title),
+            Text(widget.post.body),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+            //   children: [
+            //     Column(children: [
+            //       RaisedButton(
+            //         onPressed: () {
+            //           print(widget.post.userId);
+            //           showUserName = !showUserName;
+            //         },
+            //         child: Text('View user'),
+            //       ),
+            //       Visibility(visible: showUserName,
+            //           //  Text("Your Email is  " + widget.user.email)
+            //           child: Text('${widget.post.userId }' + " is the user  ")),
+            //
+            //     ],),
+            //     RaisedButton(
+            //       onPressed: () {},
+            //       child: Text('Comment'),
+            //     ),
+            //   ],
+            // ),
+            Row(
               children: <Widget>[
-                Text(widget.post.title),
-                Text(widget.post.body),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Column(children: [
-                      RaisedButton(
-                        onPressed: () {
-                          print(widget.post.userId);
-                          showUserName=!showUserName;
-                        },
-                        child: Text('View user'),
-                      ),
-                      Visibility(visible: showUserName,
-                    //  Text("Your Email is  " + widget.user.email)
-                        child: Text('${widget.post.userId  }' + " is the user  ")  ),
+                Expanded(
+                    child: MaterialButton(
+                      child: Text("view user",),
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
 
-                    ],),
-                    RaisedButton(
+                                 title: Text("View User" ),
+                                content: Text('${widget.post.userId }' + " is the user  "),
+                                actions: <Widget>[
+                                  MaterialButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(context);
+                                    },
+                                    child: Text("Close"),
+                                  )
+                                ],
+                              );
+                            });
+                      },
+                      color: Colors.white,
+                      textColor: Colors.grey,
+                      elevation: 0.2,
+
+                    )),
+                Expanded(
+                    child: MaterialButton(
+                      child: Text("Comment"),
                       onPressed: () {},
-                      child: Text('Comment'),
+
+                                  )
+
+
+
+
+
+
                     ),
-                  ],
-                ),
+              ],
+            ),
 
-                Text('Comments'),
-                comments.length > 0
-                    ? Container(
-                        padding: EdgeInsets.only(top: 20),
-                        height: 400,
-                        child: ListView.builder(
-                            itemCount: comments.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return GestureDetector(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
+
+
+
+            Text('Comments'),
+            comments.length > 0
+                ? Container(
+
+              padding: EdgeInsets.only(top: 20),
+              height: 350,
+              child: ListView.builder(
+                  itemCount: comments.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return GestureDetector(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Container(
+                          height: 93.0,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(10.0)),
+                              color: Colors.black12),
+                          child: Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Column(
+                              children: [
+                                Padding(padding: EdgeInsets.all(8.0),
                                   child: Container(
-                                    height: 70,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10.0)),
-                                        color: Colors.black12),
-                                    child: Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: Column(
-                                          children: [
-                                            Padding(padding: EdgeInsets.all(8.0),
-                                              child: Container(
-                                              child: Text(
-                                                comments[index].name,
-                                                style: TextStyle(fontSize: 16),
-                                              ),
-                                            ),),
-                                            // Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                            //   children: [
-                                            //     RaisedButton(onPressed: () {  },
-                                            //       child: Text('user'),),
-                                            //     RaisedButton(onPressed: () {
-                                            //       deleteComments();
-                                            //     },
-                                            //       child: Text('Delete'),),
-                                            //   ],),
-                                                                              ],
+                                      height: 60,
+                                      child: Center(
+                                        child: Text(comments[index].name,
+                                          style: TextStyle(fontSize: 16),
                                         ),
-
-
-                                    ),
+                                      )
                                   ),
                                 ),
-                                onTap: () {},
-                              );
-                            }),
 
-                      )
-                    : Container()
-              ],
+                                // Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                //   children: [
+                                //     RaisedButton(onPressed: () {  },
+                                //       child: Text('user'),),
+                                //     RaisedButton(onPressed: () {
+                                //       deleteComments();
+                                //     },
+                                //       child: Text('Delete'),),
+                                //   ],),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      onTap: () {},
+                    );
+                  }),
+
             )
-          : Container(),
+                : Container()
+          ],
+        )
+            : Container(),
     );
   }
 
@@ -229,7 +279,7 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
     final data = jsonDecode(response.body);
     if(response.statusCode == 200){
       //show the toast mesagge sucess
-     // logoutToast('Deleted${response.statusCode}');
+      // logoutToast('Deleted${response.statusCode}');
       logoutToast('Sucessfully deleted the comment');
     }else{
       //failure case
@@ -254,9 +304,9 @@ class MenuOption extends StatelessWidget {
 
   MenuOption(
       {@required this.label,
-      @required this.ontap,
-      @required this.icon,
-      this.color = Colors.blue});
+        @required this.ontap,
+        @required this.icon,
+        this.color = Colors.blue});
 
   @override
   Widget build(BuildContext context) {
