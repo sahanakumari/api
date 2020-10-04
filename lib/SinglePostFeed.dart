@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'CommentScreen.dart';
 import 'Login.dart';
 import 'MyDrawer.dart';
 import 'model/Comments.dart';
@@ -14,12 +15,14 @@ import 'model/postfeed.dart';
 
 class SinglePostFeed extends StatefulWidget {
   final User user;
+
   postfeed post;
   int index;
   int userloginid;
 
 
-  SinglePostFeed({Key key, this.user, this.post, this.userloginid})
+  SinglePostFeed({Key key, this.user, this.post, this.userloginid
+  })
       : super(key: key);
 
   @override
@@ -62,62 +65,7 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
         ),
         drawer: MyDrawer(widget.user),
 
-//       drawer: new Drawer(
-//         child: new Column(
-//           children: <Widget>[
-// //            header
-//             new UserAccountsDrawerHeader(
-//               accountName: Text(widget.user.name),
-//               currentAccountPicture: GestureDetector(
-//                 child: new CircleAvatar(
-//                   backgroundColor: Colors.blue,
-//                   child: Icon(
-//                     Icons.person_outline,
-//                     color: Colors.white,
-//                   ),
-//                 ),
-//               ),
-//               decoration: new BoxDecoration(color: Colors.red.shade900),
-//             ),
-//             Expanded(
-//               child: ListView(
-//                 children: <Widget>[
-//                   MenuOption(
-//                     label: 'Post Feed',
-//                     icon: Icons.update,
-//                     ontap: () {},
-//                   ),
-//                   MenuOption(
-//                     label: 'Friends',
-//                     icon: Icons.people,
-//                     ontap: () {},
-//                   ),
-//                   MenuOption(
-//                     label: 'Profile',
-//                     icon: Icons.account_circle,
-//                     ontap: () {},
-//                   ),
-//                   Divider(
-//                     height: 150.0,
-//                     thickness: 0.5,
-//                     color: Colors.grey,
-//                   ),
-//                   MenuOption(
-//                     label: 'Log Out',
-//                     ontap: () {
-//                       logoutToast("Logged Out Successfuly");
-//                       clearSharedPrefrences();
-//                       Navigator.of(context).pop();
-//                     },
-//                     icon: Icons.transit_enterexit,
-//                     color: Colors.green,
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           ],
-//         ),
-//
+
 
         body: widget.post != null
             ? Column(
@@ -179,7 +127,9 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
                 Expanded(
                     child: MaterialButton(
                       child: Text("Comment"),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(context,MaterialPageRoute(builder: (Context)=> CommentScreen()));
+                      },
 
                                   )
 
@@ -200,7 +150,7 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
                 ? Container(
 
               padding: EdgeInsets.only(top: 20),
-              height: 350,
+              height: 399.0,
               child: ListView.builder(
                   itemCount: comments.length,
                   itemBuilder: (BuildContext context, int index) {
@@ -208,7 +158,7 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: Container(
-                          height: 93.0,
+                          height:110,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.all(
                                   Radius.circular(10.0)),
@@ -279,7 +229,6 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
     final response = await http.delete("https://jsonplaceholder.typicode.com/posts/${widget.userloginid}",);
     final data = jsonDecode(response.body);
     if(response.statusCode == 200){
-      //show the toast mesagge sucess
       // logoutToast('Deleted${response.statusCode}');
       logoutToast('Sucessfully deleted the comment');
     }else{
@@ -296,6 +245,8 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
         context, MaterialPageRoute(builder: (BuildContext ctx) => Login()));
   }
 }
+
+
 
 class MenuOption extends StatelessWidget {
   final String label;
