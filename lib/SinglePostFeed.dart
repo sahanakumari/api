@@ -226,8 +226,8 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
     }
     setState(() {});
   }
-  deleteComments() async {
-    final response = await http.delete("https://jsonplaceholder.typicode.com/posts/${widget.userloginid}",);
+  deletepost() async {
+    final response = await http.delete("https://jsonplaceholder.typicode.com/posts/${widget.post.id}",);
     final data = jsonDecode(response.body);
     if(response.statusCode == 200){
       // logoutToast('Deleted${response.statusCode}');
