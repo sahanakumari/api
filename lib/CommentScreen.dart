@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:api/SinglePostFeed.dart';
+import 'package:api/model/User.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'model/Comments.dart';
 
@@ -11,14 +13,9 @@ import 'MyDrawer.dart';
 
 
 class CommentScreen extends StatefulWidget {
-  // int userloginid;
-  // postfeed post;
-
+final User user;
   Comments comm;
-
-
-
-  CommentScreen({this.comm});
+  CommentScreen({this.comm, this.user,});
 
   @override
   _CommentScreen createState() => _CommentScreen();
@@ -26,7 +23,7 @@ class CommentScreen extends StatefulWidget {
 
 class _CommentScreen extends State<CommentScreen> {
 
-
+  TextEditingController textEditingController =new TextEditingController();
 
 
   // Future<CommentScreen> createComments(String name) async{
@@ -42,7 +39,7 @@ class _CommentScreen extends State<CommentScreen> {
   //   }else{
   //     logoutToast('Failed to comment... try again');
   //   }
-  // }
+  //  }
 
 
 
@@ -67,16 +64,16 @@ class _CommentScreen extends State<CommentScreen> {
                 padding: EdgeInsets.only(left: 15.0, right: 15.0, bottom: 8.0),
                 child: TextFormField(
                   keyboardType: TextInputType.multiline,
-                  maxLines: 7,
+                  maxLines: 7,controller: textEditingController,
                   textAlign: TextAlign.left,
                   //controller: titleController,
-                  style: TextStyle(fontSize: 18.0, color: Colors.black),
+                  style: TextStyle(fontSize: 14.0, color: Colors.black),
                   onChanged: (value) {},
                   decoration: InputDecoration(
                     //labelText: constantStrings.additional_comments,
                       hintText: "Add your comment here",
                       labelStyle:
-                      TextStyle(fontSize: 18.0, color: Colors.black),
+                      TextStyle(fontSize: 14.0, color: Colors.black),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5.0),
                       )),
@@ -84,7 +81,7 @@ class _CommentScreen extends State<CommentScreen> {
               ),
 
               Padding(
-                  padding: EdgeInsets.only(top: 20.0),
+                  padding: EdgeInsets.only(top: 19.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
@@ -95,13 +92,13 @@ class _CommentScreen extends State<CommentScreen> {
                           color: Colors.blueAccent[700],
                           clipBehavior: Clip.antiAlias, // Add This
                           child: SizedBox(
-                            height: 45,
+                            height: 50,
                             child: MaterialButton(
                               minWidth: 200.0,
                               child: new Text(
                                 "submit",
                                 style: new TextStyle(
-                                  fontSize: 18.0,
+                                  fontSize: 14.0,
                                   color: Colors.white,
                                 ),),
                               onPressed: () {
@@ -122,42 +119,57 @@ class _CommentScreen extends State<CommentScreen> {
   }
 
 
-    postComments() async {
-      final response = await http.post("http://jsonplaceholder.typicode.com/comments/");
-      if(response.statusCode == 201){
-        logoutToast('Sucessfully Commented');
-      }else{
-        logoutToast('Failed to comment... try again');
-      }
-  }
-  // postComments() async {
-  //   Map data = {
-  //   "postId": 1,
-  //   "id": 1,
-  //   "name": "id labore ex et quam laborum",
-  //   "email": "Eliseo@gardner.biz",
-  //   "body": "laudantium enim quasi est quidem magnam voluptate ipsam eos"};
-  //
-  //   String body = json.encode(data);
-  //
-  //   http.Response response = await http.post(
-  //     'http://jsonplaceholder.typicode.com/comments/',
-  //     headers: {"Content-Type": "application/json"},
-  //     body: body,
-  //       if(response.statusCode == 201)
-  //       {
+  //   postComments() async {
+  //     final response = await http.post("http://jsonplaceholder.typicode.com/comments/");
+  //     if(response.statusCode == 201){
   //       logoutToast('Sucessfully Commented');
-  //     }
-  //       else
-  //         {
+  //     }else{
   //       logoutToast('Failed to comment... try again');
   //     }
-  //   }
+  // }
+  //postComments() async {
+
+  // Future<List<Comments>> postComments() async {
+  //   final response = await http.post("http://jsonplaceholder.typicode.com/comments/");
   //
-  // //   http.Response response = await http.post(
-  // //     url:'http://jsonplaceholder.typicode.com/comments/',
-  // //     headers: {"Content-Type": "application/json"},
-  // //     body: body);
-  // // }
+  //   if (response.statusCode == 201) {
+  //     List<dynamic> body = jsonDecode(response.body);
+  //
+  //     List<Comments> comms = body
+  //         .map(
+  //           (dynamic item) => Comments.fromJson(item),
+  //     )
+  //         .toList();
+  //
+  //     return comms;
+  //   } else {
+  //     throw "Can't  posts comments.";
+  //   }
+  // }
+  postComments() async {
+    Map data = {
+   // "postId": 1,users[i].id.toString()
+    "id":'${widget.user.id}',
+    "name": '${widget.user.name}',
+    "email": '${widget.user.email}',
+    "body": textEditingController.text
+    };
+
+    String body = json.encode(data);
+    http.Response response = await http.post(
+      'http://jsonplaceholder.typicode.com/comments/',
+      headers: {"Content-Type": "application/json"},
+      body: body,);
+        if(response.statusCode == 201)
+        {
+        logoutToast('Sucessfully Commented');
+      }
+        else
+          {
+        logoutToast('Failed to comment... try again');
+      }
+    }
+
+
 
 }

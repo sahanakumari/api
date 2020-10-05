@@ -67,8 +67,8 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
 
 
 
-        body: widget.post != null
-            ? Column(
+        body: SingleChildScrollView(
+        child: Column(
           children: <Widget>[
             Text(widget.post.title),
             Text(widget.post.body),
@@ -107,7 +107,8 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
                               return AlertDialog(
 
                                  title: Text("View User" ),
-                                content: Text('${widget.post.userId }' + " is the user  "),
+                                //content: Text('${widget.user.name }' + " is the user  "),
+                               content: Text('${widget.post.userId }' + " is the user  "),
                                 actions: <Widget>[
                                   MaterialButton(
                                     onPressed: () {
@@ -128,7 +129,7 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
                     child: MaterialButton(
                       child: Text("Comment"),
                       onPressed: () {
-                        Navigator.push(context,MaterialPageRoute(builder: (Context)=> CommentScreen()));
+                        Navigator.push(context,MaterialPageRoute(builder: (Context)=> CommentScreen(user:widget.user,)));
                       },
 
                                   )
@@ -171,7 +172,7 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
                                   child: Container(
                                       height: 60,
                                       child: Center(
-                                        child: Text(comments[index].name,
+                                        child: Text(comments[index].body,
                                           style: TextStyle(fontSize: 16),
                                         ),
                                       )
@@ -200,7 +201,7 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
                 : Container()
           ],
         )
-            : Container(),
+        ),
     );
   }
 
