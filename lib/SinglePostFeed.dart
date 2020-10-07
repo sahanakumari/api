@@ -64,12 +64,13 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
             onPressed: () {
 
             // deleteUserspost();
-              deleteUserPosts(widget.post);
+              //deleteUserPosts(widget.post);
+              delete();
               if (widget.post.id == widget.user.id) {
-                logoutToast("Sucessfully post deleted");
+                logoutToast("Sucessfully post deleted...!");
               }
               else {
-                logoutToast("try again post not deleted");
+                logoutToast("You cant delete others post...!");
               }
 
 
@@ -279,7 +280,8 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
     // } else {
     //   return false;
     // }
-    post = (await deleteUserPosts(widget.post)).cast<postfeed>();
+   // post = (await deleteUserPosts(widget.post)).cast<postfeed>();
+    post = await deleteUserPosts(widget.post);
     setState(() {});
   }
 
