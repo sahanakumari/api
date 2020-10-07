@@ -32,8 +32,6 @@ class _LoginState extends State<Login> {
 
   check() {
     for(int i=0;i<users.length;i++){
-      print(users[i].id);
-      print(users[i].email);
       if(users[i].id.toString() == myController.text){
         Navigator.push(context,
          MaterialPageRoute(builder: (context) => HomePage(user:users[i])));
@@ -56,12 +54,6 @@ class _LoginState extends State<Login> {
       User user = User.fromJson(u);
       users.add(user);
     }
-
-
-
-
-
-
   }
 
 

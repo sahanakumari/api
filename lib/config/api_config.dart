@@ -1,0 +1,1 @@
+const hostUrl = "https://jsonplaceholder.typicode.com";

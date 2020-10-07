@@ -1,8 +1,10 @@
 import 'dart:convert';
 
 import 'package:api/MyDrawer.dart';
+
 import 'package:api/model/User.dart';
 import 'package:api/model/postfeed.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -11,12 +13,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Login.dart';
 import 'SinglePostFeed.dart';
+import 'controller/post_controller.dart';
 
 class HomePage extends StatefulWidget {
   final User user;
+  final postfeed post;
 
-
-  HomePage({Key key, this.title, this.user}) : super(key: key);
+  HomePage({Key key, this.title, this.user,this.post}) : super(key: key);
   final String title;
 
   @override
@@ -26,13 +29,6 @@ class HomePage extends StatefulWidget {
 class _MyHomePageState extends State<HomePage> {
   List<postfeed> post = new List();
   int loginedUserId;
-
-
-
-
-
-
-
 
   @override
   void initState() {
@@ -53,68 +49,14 @@ class _MyHomePageState extends State<HomePage> {
             textAlign: TextAlign.center,
           )),
       drawer: MyDrawer(widget.user),
-//       drawer: new Drawer(
-//         child: new Column(
-//           children: <Widget>[
-// //            header
-//             new UserAccountsDrawerHeader(
-//               accountName: Text(widget.user.name),
-//               currentAccountPicture: GestureDetector(
-//                 child: new CircleAvatar(
-//                   backgroundColor: Colors.blue,
-//                   child: Icon(
-//                     Icons.person_outline,
-//                     color: Colors.white,
-//                   ),
-//                 ),
-//               ),
-//               decoration: new BoxDecoration(color: Colors.red.shade900),
-//             ),
-//             Expanded(
-//               child: ListView(
-//                 children: <Widget>[
-//                   MenuOption(
-//                     label: 'Post Feed',
-//                     icon: Icons.update,
-//                     ontap: () {},
-//                   ),
-//                   MenuOption(
-//                     label: 'Friends',
-//                     icon: Icons.people,
-//                     ontap: () {},
-//                   ),
-//                   MenuOption(
-//                     label: 'Profile',
-//                     icon: Icons.account_circle,
-//                     ontap: () {},
-//                   ),
-//                   Divider(
-//                     height: 150.0,
-//                     thickness: 0.5,
-//                     color: Colors.grey,
-//                   ),
-//                   MenuOption(
-//                     label: 'Log Out',
-//                     ontap: () {
-//                       logoutToast("Logged Out Successfuly");
-//                       clearSharedPrefrences();
-//                       Navigator.of(context).pop();
-//                     },
-//                     icon: Icons.transit_enterexit,
-//                     color: Colors.green,
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
+
       body: Column(
         children: <Widget>[
 //          Text("Welcome back " + widget.user.name + "!"),
 //          Text("Your Email is  " + widget.user.email)
           post == null
-              ? Container : Container(
+              ? Container
+              : Container(
 //             height: 40.0,
             height: MediaQuery.of(context).size.height - 85,
             child: ListView.builder(
@@ -144,8 +86,12 @@ class _MyHomePageState extends State<HomePage> {
 
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => SinglePostFeed(userloginid: loginedUserId, user:widget.user,post:post[index])),);
-
+                        MaterialPageRoute(
+                            builder: (context) => SinglePostFeed(
+                                userloginid: loginedUserId,
+                                user: widget.user,
+                                post: post[index])),
+                      );
                     },
                   );
                 }),
@@ -153,9 +99,7 @@ class _MyHomePageState extends State<HomePage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-
-        },
+        onPressed: () {},
         child: Icon(
           Icons.add,
           color: Colors.white,
@@ -199,18 +143,7 @@ class _MyHomePageState extends State<HomePage> {
 
   getPostLists() async {
     print('users post called');
-    final response = await http.get(
-      "https://jsonplaceholder.typicode.com/posts",
-    );
-    final data = jsonDecode(response.body);
-    print('ApI data $data');
-    for (Map<String, dynamic> u in data) {
-      postfeed posts = postfeed.fromJson(u);
-      post.add(posts);
-    }
+    post = await getPosts();
     setState(() {});
   }
-
 }
-
-
