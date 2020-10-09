@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:api/MyDrawer.dart';
+import 'package:api/NewPost.dart';
 
 import 'package:api/model/User.dart';
 import 'package:api/model/postfeed.dart';
@@ -19,6 +20,9 @@ class HomePage extends StatefulWidget {
   final User user;
   final postfeed post;
 
+
+
+
   HomePage({Key key, this.title, this.user,this.post}) : super(key: key);
   final String title;
 
@@ -29,6 +33,7 @@ class HomePage extends StatefulWidget {
 class _MyHomePageState extends State<HomePage> {
   List<postfeed> post = new List();
   int loginedUserId;
+  bool _isVisible = false;
 
   @override
   void initState() {
@@ -37,6 +42,7 @@ class _MyHomePageState extends State<HomePage> {
     getPostLists();
     getSharedUserValues();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +105,9 @@ class _MyHomePageState extends State<HomePage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(context,MaterialPageRoute(builder: (Context)=>NewPost()));
+        },
         child: Icon(
           Icons.add,
           color: Colors.white,
@@ -134,13 +142,12 @@ class _MyHomePageState extends State<HomePage> {
       if (post[index].userId == loginedUserId - 1 ||
           post[index].userId == loginedUserId + 1) {
         return Colors.blue;
-      } else {
-        ///remaing people
+      }
+      else {
         return Colors.red;
+        }
       }
     }
-  }
-
   getPostLists() async {
     print('users post called');
     post = await getPosts();

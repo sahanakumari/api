@@ -1,19 +1,17 @@
 class postfeed{
   int userId;
   int id;
-  String _title;
-
-  String get title => _title;
+  String title;
   String body;
 
-
+  // String get title => title;
 
   postfeed({this.userId, this.id, this.body});
 
   postfeed.fromJson(Map<String, dynamic> json) {
     userId = json['userId'];
     id = json['id'];
-    _title = json['title'];
+    title = json['title'];
     body = json['body'];
   }
 
@@ -21,7 +19,7 @@ class postfeed{
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['userId'] = this.userId;
     data['id'] = this.id;
-    data['title'] = this._title;
+    data['title'] = this.title;
     data['body'] = this.body;
     return data;
   }

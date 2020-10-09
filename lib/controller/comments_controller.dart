@@ -1,12 +1,9 @@
 import 'package:api/model/Comments.dart';
 import 'package:api/model/User.dart';
+
 import 'package:api/model/postfeed.dart';
 
 import '../routes/api_routes.dart' as api_routes;
-
-getAllComments() async {
-  final apiData = await api_routes.getAllComments();
-}
 
 Future<bool> postComment(User user, String comment) async {
   final responseJson = await api_routes.postComment(

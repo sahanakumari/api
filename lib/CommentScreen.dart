@@ -27,20 +27,7 @@ class CommentScreen extends StatefulWidget {
 class _CommentScreen extends State<CommentScreen> {
   TextEditingController textEditingController = new TextEditingController();
 
-  // Future<CommentScreen> createComments(String name) async{
-  //   final String apiUrl = "http://jsonplaceholder.typicode.com/comments/";
-  //
-  //   final response = await http.post(apiUrl, body: {
-  //     "name": name,
-  //
-  //   });
-  //
-  //   if(response.statusCode == 201){
-  //     logoutToast('Sucessfully Commented');
-  //   }else{
-  //     logoutToast('Failed to comment... try again');
-  //   }
-  //  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +99,8 @@ class _CommentScreen extends State<CommentScreen> {
                   )),
             ],
           ),
-        ));
+        )
+    );
   }
 
   //   postComments() async {

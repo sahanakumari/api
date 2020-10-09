@@ -1,10 +1,4 @@
-
-
-
-
-
 import '../routes/api_routes.dart' as api_routes;
-
 import 'package:api/model/postfeed.dart';
 
 Future<List<postfeed>> deleteUserPosts(postfeed post) async {

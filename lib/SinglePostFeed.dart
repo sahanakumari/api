@@ -35,18 +35,29 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
   List<Comments> comments = new List();
   List<postfeed> post = new List();
   int loginedUserId;
+  int index;
+   bool _isDeleteMode = false;
+  //bool _isVisible = true;
 
-  bool showUserName = false;
+  void hidedelete() {
+    setState(() {
+      if ( widget.post.userId ==  widget.user.id)
+        _isDeleteMode = !_isDeleteMode;
+    });
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getComments();
+    hidedelete();
   }
 
   @override
   Widget build(BuildContext context) {
+    print(' post userid ${widget.post.userId}');
+    print('user ${widget.user.id}');
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -55,28 +66,37 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
           "Post",
           textAlign: TextAlign.center,
         ),
-        actions: <Widget>[
-          new IconButton(
+
+    //       actions: <Widget>[
+    //   _isDeleteMode ? IconButton(
+    //   onPressed: () {},
+    //     icon: Icon(Icons.delete)
+    // )
+    // ]
+    //           : Container(),
+    // ),
+     actions: <Widget>[
+       _isDeleteMode ?
+          new IconButton( onPressed: () {
+
+            // deleteUserspost();
+            //deleteUserPosts(widget.post);
+            delete();
+            if (widget.post.userId== widget.user.id) {
+              logoutToast("Sucessfully post deleted...!");
+            }
+            else {
+              logoutToast("You cant delete others post...!");
+            }
+
+
+          },
             icon: Icon(
               Icons.delete,
               color: Colors.white,
-            ),
-            onPressed: () {
+            )   ): Container(),
 
-            // deleteUserspost();
-              //deleteUserPosts(widget.post);
-              delete();
-              if (widget.post.id == widget.user.id) {
-                logoutToast("Sucessfully post deleted...!");
-              }
-              else {
-                logoutToast("You cant delete others post...!");
-              }
-
-
-            },
-          ),
-        ],
+                ],
       ),
       drawer: MyDrawer(widget.user),
       body: SingleChildScrollView(
@@ -121,7 +141,7 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
                                   title: Text("View User"),
                                   //content: Text('${widget.user.name }' + " is the user  "),
                                   content:
-                                  Text('${widget.post.userId}' + " is the user  "),
+                                  Text('${widget.post.id}' + " is the user  "),
                                   actions: <Widget>[
                                     MaterialButton(
                                       onPressed: () {
@@ -234,40 +254,7 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
     setState(() {});
   }
 
-  // deleteUserPost(int id) async {
-  //   // print('users comment called');
-  //   // final response = await http.get(
-  //   //   "http://jsonplaceholder.typicode.com/comments?postId=${widget.post.id}",
-  //   // );
-  //   // final data = jsonDecode(response.body);
-  //   // print('ApI data $data');
-  //   // for (Map<String, dynamic> u in data) {
-  //   //   Comments comm = Comments.fromJson(u);
-  //   //   comments.add(comm);
-  //   // }
-  //   comments = await deleteUserPost(widget.post.id);
-  //   setState(() {});
- // }
- //  bool deletePost(List<postfeed> post, int index) {
- //    if (post[index].userId == loginedUserId) {
- //      return true;
- //    }
- //    else {
- //      return false;
- //    }
- //  }
 
-  // Future<Response> deletePost(String id) async {
-  //   final response = await http.delete(
-  //         "https://jsonplaceholder.typicode.com/posts/postId=${widget.post.id}",);
-  //   final data = jsonDecode(response.body);
-  //   if (response.statusCode == 200) {
-  //     logoutToast('Sucessfully deleted the comment');
-  //   } else {
-  //     logoutToast('Failed to delete the comment... try again');
-  //   }
-  //   return response;
-  // }
 
   delete() async {
     // final response = await http.delete(

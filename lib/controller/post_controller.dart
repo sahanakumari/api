@@ -1,5 +1,7 @@
 import 'package:api/model/postfeed.dart';
 import 'package:api/routes/api_routes.dart';
+import '../routes/api_routes.dart' as api_routes;
+
 
 Future<List<postfeed>> getPosts() async {
   List<postfeed> posts = [];
@@ -10,4 +12,21 @@ Future<List<postfeed>> getPosts() async {
     posts.add(post);
   }
   return posts;
+}
+
+
+Future<bool> newPost(postfeed post, String title,String body) async {
+  final responseJson = await api_routes.newPost(
+    {
+
+      "title": title,
+      "body": body,
+    },
+  );
+  final statusCode = responseJson['status_code'] as int;
+  if (statusCode == 201) {
+    return true;
+  } else {
+    return false;
+  }
 }
