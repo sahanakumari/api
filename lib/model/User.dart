@@ -31,6 +31,8 @@ class User {
     json['company'] != null ? new Company.fromJson(json['company']) : null;
   }
 
+
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;

@@ -8,8 +8,11 @@ import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'CommentScreen.dart';
+import 'FriendsProfile.dart';
 import 'Login.dart';
 import 'MyDrawer.dart';
+import 'OtherPeople.dart';
+import 'Profile.dart';
 import 'controller/comments_controller.dart';
 import 'controller/delete_controller.dart';
 import 'model/Comments.dart';
@@ -19,13 +22,21 @@ import 'model/postfeed.dart';
 class SinglePostFeed extends StatefulWidget {
   final User user;
   final Comments comments;
+  final Address address;
+
+
+
+  SinglePostFeed({this.user, this.comments,this.address,  this.post, this.index,
+      this.userloginid, this.loginedUserId});
+
   final postfeed post;
   int index;
   int userloginid;
  int  loginedUserId;
 
-  SinglePostFeed({Key key, this.user, this.post, this.userloginid,this.loginedUserId,this.comments})
-      : super(key: key);
+  // SinglePostFeed({Key key, this.user, this.post, this.userloginid,this.loginedUserId,this.comments,this.address})
+  //     : super(key: key);
+
 
   @override
   _SinglePostFeedState createState() => _SinglePostFeedState();
@@ -34,9 +45,15 @@ class SinglePostFeed extends StatefulWidget {
 class _SinglePostFeedState extends State<SinglePostFeed> {
   List<Comments> comments = new List();
   List<postfeed> post = new List();
+  List<User> user = new List();
+  List<Address> address = new List();
   int loginedUserId;
   int index;
    bool _isDeleteMode = false;
+
+
+
+
   //bool _isVisible = true;
 
   void hidedelete() {
@@ -57,7 +74,9 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
   @override
   Widget build(BuildContext context) {
     print(' post userid ${widget.post.userId}');
+    print('user ${widget.userloginid}');
     print('user ${widget.user.id}');
+    print('post ${widget.post.id}');
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -82,7 +101,7 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
             // deleteUserspost();
             //deleteUserPosts(widget.post);
             delete();
-            if (widget.post.userId== widget.user.id) {
+            if (post[index].userId == widget.user.id) {
               logoutToast("Sucessfully post deleted...!");
             }
             else {
@@ -128,35 +147,54 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
               // ),
               Row(
                 children: <Widget>[
+                  // Expanded(
+                  //     child: MaterialButton(
+                  //       child: Text(
+                  //         "view user",
+                  //       ),
+                  //       onPressed: () {
+                  //         showDialog(
+                  //             context: context,
+                  //             builder: (context) {
+                  //               return AlertDialog(
+                  //                 title: Text("View User"),
+                  //                 content: Text('${widget.user.name }' + " is the user  "),
+                  //                // content:
+                  //                 // Text('${widget.post.id}' + " is the user  "),
+                  //                 // actions: <Widget>[
+                  //                 //   MaterialButton(
+                  //                 //     onPressed: () {
+                  //                 //       Navigator.of(context).pop(context);
+                  //                 //     },
+                  //                 //     child: Text("Close"),
+                  //                 //   )
+                  //                // ],
+                  //
+                  //               );
+                  //             });
+                  //       },
+                  //       color: Colors.white,
+                  //       textColor: Colors.black,
+                  //       elevation: 0.2,
+                  //     )),
                   Expanded(
+
                       child: MaterialButton(
-                        child: Text(
-                          "view user",
-                        ),
+                        child: Text("View User"),
                         onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: Text("View User"),
-                                  //content: Text('${widget.user.name }' + " is the user  "),
-                                  content:
-                                  Text('${widget.post.id}' + " is the user  "),
-                                  actions: <Widget>[
-                                    MaterialButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop(context);
-                                      },
-                                      child: Text("Close"),
-                                    )
-                                  ],
-                                );
-                              });
+                          // if (widget.post.userId == widget.user.id)
+
+
+
+
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (Context) => Profile(user: widget.user,address: widget.user.address, post: widget.post, userloginid: loginedUserId,)));
+                          print('$user');
                         },
-                        color: Colors.white,
-                        textColor: Colors.black,
-                        elevation: 0.2,
                       )),
+
                   Expanded(
                       child: MaterialButton(
                         child: Text("Comment"),
@@ -271,6 +309,7 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
     post = await deleteUserPosts(widget.post);
     setState(() {});
   }
+
 
   clearSharedPrefrences() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();

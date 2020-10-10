@@ -21,8 +21,6 @@ class HomePage extends StatefulWidget {
   final postfeed post;
 
 
-
-
   HomePage({Key key, this.title, this.user,this.post}) : super(key: key);
   final String title;
 
@@ -32,6 +30,8 @@ class HomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<HomePage> {
   List<postfeed> post = new List();
+  List<User> user = new List();
+
   int loginedUserId;
   bool _isVisible = false;
 
@@ -94,9 +94,10 @@ class _MyHomePageState extends State<HomePage> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => SinglePostFeed(
-                                userloginid: loginedUserId,
+                                 userloginid: loginedUserId,
                                 user: widget.user,
-                                post: post[index])),
+                                post: post[index],
+                           )),
                       );
                     },
                   );
@@ -136,12 +137,12 @@ class _MyHomePageState extends State<HomePage> {
 
   Color getColorBasedOnUserPost(List<postfeed> post, int index) {
     if (post[index].userId == loginedUserId) {
-      return Colors.greenAccent;
+      return Colors.lightBlueAccent;
     } else {
       ///friends post
       if (post[index].userId == loginedUserId - 1 ||
           post[index].userId == loginedUserId + 1) {
-        return Colors.blue;
+        return Colors.yellow;
       }
       else {
         return Colors.red;

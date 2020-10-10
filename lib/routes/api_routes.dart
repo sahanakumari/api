@@ -18,6 +18,6 @@ Future<Map<String, dynamic>> deleteUserPosts(int postId) =>
 Future<Map<String, dynamic>> newPost(Map<String, dynamic> data) =>
     post('/posts', data);
 
-
+Future<Map<String, dynamic>> getUser() => fetch('/posts');
 
 
