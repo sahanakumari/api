@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -14,7 +13,8 @@ import 'MyDrawer.dart';
 import 'OtherPeople.dart';
 import 'Profile.dart';
 import 'controller/comments_controller.dart';
-import 'controller/delete_controller.dart';
+
+import 'controller/post_controller.dart';
 import 'model/Comments.dart';
 import 'model/User.dart';
 import 'model/postfeed.dart';
@@ -23,20 +23,24 @@ class SinglePostFeed extends StatefulWidget {
   final User user;
   final Comments comments;
   final Address address;
+  var colorex;
 
-
-
-  SinglePostFeed({this.user, this.comments,this.address,  this.post, this.index,
-      this.userloginid, this.loginedUserId});
+  SinglePostFeed({
+    this.user,
+    this.comments,
+    this.address,
+    this.post,
+    this.index,
+    this.colorex
+  });
 
   final postfeed post;
   int index;
   int userloginid;
- int  loginedUserId;
+  int loginedUserId;
 
   // SinglePostFeed({Key key, this.user, this.post, this.userloginid,this.loginedUserId,this.comments,this.address})
   //     : super(key: key);
-
 
   @override
   _SinglePostFeedState createState() => _SinglePostFeedState();
@@ -49,23 +53,32 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
   List<Address> address = new List();
   int loginedUserId;
   int index;
-   bool _isDeleteMode = false;
+  bool _hideVisible = false;
 
 
-
-
-  //bool _isVisible = true;
+  bool _isDeleteMode = false;
 
   void hidedelete() {
     setState(() {
-      if ( widget.post.userId ==  widget.user.id)
-        _isDeleteMode = !_isDeleteMode;
+      if (widget.post.userId == widget.user.id) _isDeleteMode = !_isDeleteMode;
+    });
+  }
+
+  void hideText() {
+    setState(() {
+      if (widget.post.userId == widget.user.id - 1 ||
+          widget.post.userId == widget.user.id + 1)
+        _hideVisible = !_hideVisible;
     });
   }
 
   @override
   void initState() {
-    // TODO: implement initState
+    print(' post userId ${widget.post.userId}');
+    print('user ${widget.userloginid}');
+    print('user ${widget.user.id}');
+    print('post ${widget.post.id}');
+    print('color ${widget.colorex}');
     super.initState();
     getComments();
     hidedelete();
@@ -73,197 +86,196 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
 
   @override
   Widget build(BuildContext context) {
-    print(' post userid ${widget.post.userId}');
-    print('user ${widget.userloginid}');
-    print('user ${widget.user.id}');
-    print('post ${widget.post.id}');
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          "Post",
-          textAlign: TextAlign.center,
+          "Post", textAlign: TextAlign.center,
         ),
 
-    //       actions: <Widget>[
-    //   _isDeleteMode ? IconButton(
-    //   onPressed: () {},
-    //     icon: Icon(Icons.delete)
-    // )
-    // ]
-    //           : Container(),
-    // ),
-     actions: <Widget>[
-       _isDeleteMode ?
-          new IconButton( onPressed: () {
-
-            // deleteUserspost();
-            //deleteUserPosts(widget.post);
-            delete();
-            if (post[index].userId == widget.user.id) {
-              logoutToast("Sucessfully post deleted...!");
-            }
-            else {
-              logoutToast("You cant delete others post...!");
-            }
-
-
-          },
-            icon: Icon(
-              Icons.delete,
-              color: Colors.white,
-            )   ): Container(),
-
-                ],
+        //       actions: <Widget>[
+        //   _isDeleteMode ? IconButton(
+        //   onPressed: () {},
+        //     icon: Icon(Icons.delete)
+        // )
+        // ]
+        //           : Container(),
+        // ),
+        actions: <Widget>[
+          _isDeleteMode
+              ? new IconButton(
+                  onPressed: () {
+                    delete();
+                    if (widget.post.userId == widget.user.id) {
+                      logoutToast("Successfully post deleted...!");
+                    } else {
+                      logoutToast("You cant delete others post...!");
+                    }
+                  },
+                  icon: Icon(
+                    Icons.delete,
+                    color: Colors.white,
+                  ))
+              : Container(),
+        ],
       ),
-      drawer: MyDrawer(widget.user),
+      drawer: MyDrawer(user: widget.user, post: widget.post),
       body: SingleChildScrollView(
           child: Column(
+        children: <Widget>[
+          Text(widget.post.title),
+          Text(widget.post.body),
+          // Row(
+          //                 mainAxisAlignment: MainAxisAlignment.spaceAround,
+          //                 children: [
+          //                   Column(children: [
+          //                     RaisedButton(
+          //                       onPressed: () {
+          //                         print(widget.post.userId);
+          //                         showUserName = !showUserName;
+          //                       },
+          //                       child: Text('View user'),
+          //                     ),
+          //                     Visibility(visible: showUserName,
+          //                         //  Text("Your Email is  " + widget.user.email)
+          //                         child: Text('${widget.post.userId }' + " is the user  ")),
+          //
+          //                   ],),
+          //                   RaisedButton(
+          //                     onPressed: () {},
+          //                     child: Text('Comment'),
+          //                   ),
+          //                 ],
+          // ),
+
+          Row(
             children: <Widget>[
-              Text(widget.post.title),
-              Text(widget.post.body),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-              //   children: [
-              //     Column(children: [
-              //       RaisedButton(
-              //         onPressed: () {
-              //           print(widget.post.userId);
-              //           showUserName = !showUserName;
-              //         },
-              //         child: Text('View user'),
+              // Expanded(
+              //     child: MaterialButton(
+              //       child: Text(
+              //         "view user",
               //       ),
-              //       Visibility(visible: showUserName,
-              //           //  Text("Your Email is  " + widget.user.email)
-              //           child: Text('${widget.post.userId }' + " is the user  ")),
+              //       onPressed: () {
+              //         showDialog(
+              //             context: context,
+              //             builder: (context) {
+              //               return AlertDialog(
+              //                 title: Text("View User"),
+              //                 content: Text('${widget.user.name }' + " is the user  "),
+              //                // content:
+              //                 // Text('${widget.post.id}' + " is the user  "),
+              //                 // actions: <Widget>[
+              //                 //   MaterialButton(
+              //                 //     onPressed: () {
+              //                 //       Navigator.of(context).pop(context);
+              //                 //     },
+              //                 //     child: Text("Close"),
+              //                 //   )
+              //                // ],
               //
-              //     ],),
-              //     RaisedButton(
-              //       onPressed: () {},
-              //       child: Text('Comment'),
-              //     ),
-              //   ],
-              // ),
-              Row(
-                children: <Widget>[
-                  // Expanded(
-                  //     child: MaterialButton(
-                  //       child: Text(
-                  //         "view user",
-                  //       ),
-                  //       onPressed: () {
-                  //         showDialog(
-                  //             context: context,
-                  //             builder: (context) {
-                  //               return AlertDialog(
-                  //                 title: Text("View User"),
-                  //                 content: Text('${widget.user.name }' + " is the user  "),
-                  //                // content:
-                  //                 // Text('${widget.post.id}' + " is the user  "),
-                  //                 // actions: <Widget>[
-                  //                 //   MaterialButton(
-                  //                 //     onPressed: () {
-                  //                 //       Navigator.of(context).pop(context);
-                  //                 //     },
-                  //                 //     child: Text("Close"),
-                  //                 //   )
-                  //                // ],
-                  //
-                  //               );
-                  //             });
-                  //       },
-                  //       color: Colors.white,
-                  //       textColor: Colors.black,
-                  //       elevation: 0.2,
-                  //     )),
-                  Expanded(
+              //               );
+              //             });
+              //       },
+              //       color: Colors.white,
+              //       textColor: Colors.black,
+              //       elevation: 0.2,
+              //     )),
+              // _hideVisible ?
+              Visibility(
+                visible: widget.colorex==Colors.lightBlueAccent?false:true,
+                child:
+              Expanded(
+                  child:MaterialButton(
+                child: Text("View User"),
+                onPressed: () {
+                  // if (widget.post.userId == widget.user.id- 1 ||
+                  //     widget.post.userId == widget.user.id+ 1) {
+                  getColorBasedOnUserPost(post, index);
+                  _hideVisible;
 
-                      child: MaterialButton(
-                        child: Text("View User"),
-                        onPressed: () {
-                          // if (widget.post.userId == widget.user.id)
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (Context) => FriendsProfile(
+                                user: widget.user,
+                                address: widget.user.address,
+                                post: widget.post,
+                                userloginid: loginedUserId,
+                              )));
+                  print('$user');
+                },
+              ))),
 
+              Expanded(
+                  child: MaterialButton(
+                child: Text(" Click here to Comment"),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (Context) => CommentScreen(
+                                user: widget.user,
+                              )));
+                },
+              )),
+            ],
+          ),
 
+          Text('Comments'),
+          comments.length > 0
+              ? Container(
+                  padding: EdgeInsets.only(top: 20),
+                  height: 399.0,
+                  child: ListView.builder(
+                      itemCount: comments.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return GestureDetector(
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Container(
+                              height: 110,
+                              decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0)),
+                                  color: Colors.black12),
+                              child: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Container(
+                                          height: 60,
+                                          child: Center(
+                                            child: Text(
+                                              comments[index].body,
+                                              style: TextStyle(fontSize: 16),
+                                            ),
+                                          )),
+                                    ),
 
-
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (Context) => Profile(user: widget.user,address: widget.user.address, post: widget.post, userloginid: loginedUserId,)));
-                          print('$user');
-                        },
-                      )),
-
-                  Expanded(
-                      child: MaterialButton(
-                        child: Text("Comment"),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (Context) => CommentScreen(
-                                    user: widget.user,
-                                  )));
-                        },
-                      )),
-                ],
-              ),
-
-              Text('Comments'),
-              comments.length > 0
-                  ? Container(
-                padding: EdgeInsets.only(top: 20),
-                height: 399.0,
-                child: ListView.builder(
-                    itemCount: comments.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return GestureDetector(
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Container(
-                            height: 110,
-                            decoration: BoxDecoration(
-                                borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                                color: Colors.black12),
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Column(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Container(
-                                        height: 60,
-                                        child: Center(
-                                          child: Text(
-                                            comments[index].body,
-                                            style: TextStyle(fontSize: 16),
-                                          ),
-                                        )),
-                                  ),
-
-                                  // Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                  //   children: [
-                                  //     RaisedButton(onPressed: () {  },
-                                  //       child: Text('user'),),
-                                  //     RaisedButton(onPressed: () {
-                                  //       deleteComments();
-                                  //     },
-                                  //       child: Text('Delete'),),
-                                  //   ],),
-                                ],
+                                    // Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                    //   children: [
+                                    //     RaisedButton(onPressed: () {  },
+                                    //       child: Text('user'),),
+                                    //     RaisedButton(onPressed: () {
+                                    //       deleteComments();
+                                    //     },
+                                    //       child: Text('Delete'),),
+                                    //   ],),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        onTap: () {},
-                      );
-                    }),
-              )
-                  : Container()
-            ],
-          )),
+                          onTap: () {},
+                        );
+                      }),
+                )
+              : Container()
+        ],
+      )),
     );
   }
 
@@ -288,11 +300,10 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
     //   Comments comm = Comments.fromJson(u);
     //   comments.add(comm);
     // }
+    // comments = await getCommentsOfPost(widget.post);
     comments = await getCommentsOfPost(widget.post);
     setState(() {});
   }
-
-
 
   delete() async {
     // final response = await http.delete(
@@ -305,17 +316,27 @@ class _SinglePostFeedState extends State<SinglePostFeed> {
     // } else {
     //   return false;
     // }
-   // post = (await deleteUserPosts(widget.post)).cast<postfeed>();
-    post = await deleteUserPosts(widget.post);
+    // post = (await deleteUserPosts(widget.post)).cast<postfeed>();
+    //  post = await deleteUserPosts(widget.post);
+    // post= await deleteUserPosts(widget.post);
     setState(() {});
   }
-
 
   clearSharedPrefrences() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.remove("Id");
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (BuildContext ctx) => Login()));
+  }
+
+  Color getColorBasedOnUserPost(List<postfeed> post, int index) {
+    ///friends post
+    if (post[index].userId == loginedUserId - 1 ||
+        post[index].userId == loginedUserId + 1) {
+      return Colors.yellow;
+    } else {
+      return Colors.red;
+    }
   }
 }
 
@@ -327,9 +348,9 @@ class MenuOption extends StatelessWidget {
 
   MenuOption(
       {@required this.label,
-        @required this.ontap,
-        @required this.icon,
-        this.color = Colors.blue});
+      @required this.ontap,
+      @required this.icon,
+      this.color = Colors.blue});
 
   @override
   Widget build(BuildContext context) {

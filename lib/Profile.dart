@@ -1,6 +1,8 @@
 import 'package:api/model/postfeed.dart';
 import 'package:flutter/material.dart';
 
+import 'AlbumsTitle.dart';
+import 'Friends.dart';
 import 'FriendsProfile.dart';
 import 'MyDrawer.dart';
 import 'OtherPeople.dart';
@@ -52,7 +54,7 @@ class _ProfileState extends State<Profile> {
             "Profile",
             textAlign: TextAlign.center,
           )),
-      drawer: MyDrawer(widget.user),
+      drawer: MyDrawer(user: widget.user,post: widget.post),
       //     body: Card(
       //       child: ListView(
       //         children: <Widget>[
@@ -323,7 +325,7 @@ class _ProfileState extends State<Profile> {
 
                     child: MaterialButton(
                       onPressed: () {
-
+                             Navigator.push(context, MaterialPageRoute(builder: (Context)=>  Friends()));
                       },
                       color: Colors.white,
                       textColor: Colors.black,
@@ -339,7 +341,7 @@ class _ProfileState extends State<Profile> {
 
                     child: MaterialButton(
                       onPressed: () {
-
+                           Navigator.push(context, MaterialPageRoute(builder: (Context)=>Albums()));
                       },
                       color: Colors.white,
                       textColor: Colors.black,
@@ -467,10 +469,10 @@ class _ProfileState extends State<Profile> {
       ///friends post
       if (widget.post.userId == widget.user.id - 1 ||
           widget.post.userId == widget.user.id + 1) {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (Context) => FriendsProfile()));
+        // Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //         builder: (Context) => FriendsProfile()));
 
         return Colors.yellow;
       }

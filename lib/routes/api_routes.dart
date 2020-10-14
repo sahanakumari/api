@@ -20,4 +20,7 @@ Future<Map<String, dynamic>> newPost(Map<String, dynamic> data) =>
 
 Future<Map<String, dynamic>> getUser() => fetch('/posts');
 
+Future<Map<String, dynamic>> getAlbum() => fetch('/albums');
+Future<Map<String, dynamic>> getImage() => fetch('/photos');
+
 

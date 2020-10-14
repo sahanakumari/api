@@ -7,9 +7,16 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'controller/post_controller.dart';
+import 'main.dart';
 import 'model/User.dart';
+import 'model/postfeed.dart';
 
 class Login extends StatefulWidget {
+  final postfeed post;
+
+  const Login({Key key, this.post}) : super(key: key);
+
   @override
   _LoginState createState() => _LoginState();
 }
@@ -17,12 +24,14 @@ class Login extends StatefulWidget {
 
 
 class _LoginState extends State<Login> {
+  List<postfeed> post = new List();
 
   String id, password;
   final _key = new GlobalKey<FormState>();
   bool _secureText = true;
   final myController = TextEditingController();
   List<User> users = [];
+  Storage stg;
   showHide() {
     setState(() {
       _secureText = !_secureText;
@@ -33,18 +42,17 @@ class _LoginState extends State<Login> {
     for(int i=0;i<users.length;i++){
       if(users[i].id.toString() == myController.text){
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => HomePage(user:users[i])));
-        saveUserLogin(i);
-        loginToast("Logged In Successfuly");
+            MaterialPageRoute(builder: (context) => Post(user:users[i],post: post[i],)));
+        stg.saveUserLogin(i);
+        loginToast("Logged In Successful");
 
       }
     }
   }
-  saveUserLogin(int i) async{
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setInt("Id",users[i].id);
-  }
-  login() async {
+
+
+  login() async
+  {
     print('users api called');
     final response = await http.get("https://jsonplaceholder.typicode.com/users",);
     final data = jsonDecode(response.body);
@@ -60,8 +68,10 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     // TODO: implement initState
+    stg=Storage();
     super.initState();
     login();
+    getPostLists();
   }
 
   @override
@@ -208,6 +218,12 @@ class _LoginState extends State<Login> {
 
 
 
+  }
+  getPostLists() async {
+    print('users post called');
+    post = await getPosts();
+
+    setState(() {});
   }
 
 }

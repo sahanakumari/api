@@ -1,22 +1,39 @@
+import 'package:api/model/postfeed.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:api/Profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Login.dart';
+import 'Post.dart';
+import 'main.dart';
 import 'model/User.dart';
 
 
 class MyDrawer extends StatefulWidget {
-  final   User user;
+  final  User user;
+  final postfeed post;
+  final Address address;
 
-  MyDrawer(this.user);
+
+
+  MyDrawer({this.user, this.address,  this.post,});
 
   @override
   _MyDrawerState createState() => _MyDrawerState();
 }
 
 class _MyDrawerState extends State<MyDrawer> {
+  Storage stg=Storage();
+  ///List<postfeed> post = new List();
+  List<User> user = new List();
+  List<Address> address = new List();
+
+
+
+
   @override
   Widget build(BuildContext context) {
+    // print(' p userid ${widget.loginedUserId}');
     return Drawer(
       child: new Column(
         children: <Widget>[
@@ -40,7 +57,9 @@ class _MyDrawerState extends State<MyDrawer> {
                 MenuOption(
                   label: 'Post Feed',
                   icon: Icons.update,
-                  ontap: () {},
+                  ontap: () {
+                    Navigator.push(context,MaterialPageRoute(builder: (Context)=>Post(user: widget.user,post:widget.post)));
+                  },
                 ),
                 MenuOption(
                   label: 'Friends',
@@ -50,7 +69,18 @@ class _MyDrawerState extends State<MyDrawer> {
                 MenuOption(
                   label: 'Profile',
                   icon: Icons.account_circle,
-                  ontap: () {},
+                  ontap: () {
+                    // if (widget.post.userId == widget.user.id)
+
+
+
+
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (Context) => Profile(user: widget.user,address: widget.user.address, post: widget.post,)));
+                  //  print('$user');
+                  },
                 ),
                 Divider(
                   height: 150.0,
@@ -61,8 +91,8 @@ class _MyDrawerState extends State<MyDrawer> {
                   label: 'Log Out',
                   ontap: () {
                     logoutToast("Logged Out Successfuly");
-                    clearSharedPrefrences();
-                    Navigator.of(context).pop();
+                    stg.clearSavedUser();
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder:(context)=>Login()));
                   },
                   icon: Icons.transit_enterexit,
                   color: Colors.green,
@@ -75,13 +105,14 @@ class _MyDrawerState extends State<MyDrawer> {
     );
   }
 
-  void clearSharedPrefrences() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.remove("Id");
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (BuildContext ctx) => Login()));
-    Navigator.pop(context);
-  }
+  // void clearSharedPrefrences() async {
+  //   SharedPreferences preferences = await SharedPreferences.getInstance();
+  //   preferences.remove("Id");
+  //   Navigator.pushReplacement(
+  //       context, MaterialPageRoute(builder: (BuildContext ctx) => Login()));
+  //   Navigator.pop(context);
+  // }
+
 
 
 

@@ -37,7 +37,7 @@ class _NewPostState extends State<NewPost> {
                 padding: EdgeInsets.only(left: 15.0, right: 15.0, bottom: 8.0),
                 child: TextFormField(
                   keyboardType: TextInputType.multiline,
-                  maxLines: 7, controller: texttitlecontroller,
+                  maxLines: 2, controller: texttitlecontroller,
                   textAlign: TextAlign.left,
                   //controller: titleController,
                   style: TextStyle(fontSize: 14.0, color: Colors.black),

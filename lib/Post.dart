@@ -16,28 +16,30 @@ import 'Login.dart';
 import 'SinglePostFeed.dart';
 import 'controller/post_controller.dart';
 
-class HomePage extends StatefulWidget {
+class Post extends StatefulWidget {
   final User user;
   final postfeed post;
 
 
-  HomePage({Key key, this.title, this.user,this.post}) : super(key: key);
+
+  Post({Key key, this.title, this.user,this.post}) : super(key: key);
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _PostState createState() => _PostState();
 }
 
-class _MyHomePageState extends State<HomePage> {
-  List<postfeed> post = new List();
-  List<User> user = new List();
+class _PostState extends State<Post> {
+  List<postfeed> post;
+  List<User> user;
 
   int loginedUserId;
   bool _isVisible = false;
 
   @override
   void initState() {
-    // TODO: implement initState
+    post = new List();
+    List<User> user = new List();
     super.initState();
     getPostLists();
     getSharedUserValues();
@@ -46,6 +48,10 @@ class _MyHomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    print(' post page user${widget.user}');
+    print('post page post ${widget.post}');
+
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -54,7 +60,7 @@ class _MyHomePageState extends State<HomePage> {
             "Post Feeds",
             textAlign: TextAlign.center,
           )),
-      drawer: MyDrawer(widget.user),
+      drawer: MyDrawer(user: widget.user,post:widget.post),
 
       body: Column(
         children: <Widget>[
@@ -89,14 +95,15 @@ class _MyHomePageState extends State<HomePage> {
                     onTap: () {
                       //  Navigator.push(context,MaterialPageRoute(builder: (context)=> new SinglePostFeed()));
                       print(post[index].userId);
-
+                      final colorex=getColorBasedOnUserPost(post, index);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => SinglePostFeed(
-                                 userloginid: loginedUserId,
+
                                 user: widget.user,
                                 post: post[index],
+                                colorex: colorex,
                            )),
                       );
                     },
@@ -149,6 +156,22 @@ class _MyHomePageState extends State<HomePage> {
         }
       }
     }
+
+  // Color getColorBasedOnUserPostExpectUser(List<postfeed> post, int index) {
+  //
+  //     ///friends post
+  //     if (post[index].userId == loginedUserId - 1 ||
+  //         post[index].userId == loginedUserId + 1) {
+  //       return Colors.yellow;
+  //     }
+  //     else
+  //       {
+  //       return Colors.red;
+  //     }
+  //
+  // }
+
+
   getPostLists() async {
     print('users post called');
     post = await getPosts();
