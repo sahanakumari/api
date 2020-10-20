@@ -2,19 +2,19 @@ import 'package:api/model/User.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
+import 'Friends.dart';
 import 'MyDrawer.dart';
 import 'controller/post_controller.dart';
+import 'controller/user_controller.dart';
 import 'model/postfeed.dart';
 
 class FriendsProfile extends StatefulWidget {
   final postfeed post;
   final User user;
-  final Address address;
-  int userloginid;
-  int  loginedUserId;
 
 
-  FriendsProfile({this.user,this.address,this.post,this.userloginid,this.loginedUserId});
+
+  FriendsProfile({this.user,this.post});
   @override
   _FriendsProfileState createState() => _FriendsProfileState();
 
@@ -24,7 +24,8 @@ class FriendsProfile extends StatefulWidget {
 class _FriendsProfileState extends State<FriendsProfile> {
   List<User> user = new List();
   List<postfeed> post = new List();
-  int loginedUserId;
+
+  int index;
 
 
   @override
@@ -38,14 +39,14 @@ class _FriendsProfileState extends State<FriendsProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-        "Friends Profile",
-        textAlign: TextAlign.center,
-    )),
-      drawer: MyDrawer(user: widget.user,post: widget.post),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+          centerTitle: true,
+          title: Text(
+            "Friends Profile",
+            textAlign: TextAlign.center,
+          )),
+      drawer: MyDrawer(user: widget.user),
       body: new Container(
         color: Colors.white,
 
@@ -149,6 +150,7 @@ class _FriendsProfileState extends State<FriendsProfile> {
                                 // )
                               ],
                             )),
+
                         Padding(
                             padding: EdgeInsets.only(
                                 left: 25.0, right: 25.0, top: 25.0),
@@ -284,12 +286,12 @@ class _FriendsProfileState extends State<FriendsProfile> {
                                   child: Padding(
                                     padding: EdgeInsets.only(
                                         left: 25.0, right: 55.0, top: 2.0),
-                                    child: Text(widget.address.street),
+                                    child: Text(widget.user.address.street),
                                   ),
                                   flex: 2,
                                 ),
                                 Flexible(
-                                  child: Text(widget.address.city),
+                                  child: Text(widget.user.address.city),
                                   flex: 2,
                                 ),
                               ],
@@ -308,9 +310,9 @@ class _FriendsProfileState extends State<FriendsProfile> {
                 Expanded(
 
                     child: MaterialButton(
-                      // onPressed: () {
-                      //   Navigator.push(context, MaterialPageRoute(builder: (Context)=>FriendsProfile()));
-                      // },
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (Context)=>Friends()));
+                      },
                       color: Colors.white,
                       textColor: Colors.black,
                       padding: EdgeInsets.only(left: 25.0,),
@@ -379,7 +381,7 @@ class _FriendsProfileState extends State<FriendsProfile> {
                               decoration: BoxDecoration(
                                 borderRadius:
                                 BorderRadius.all(Radius.circular(10.0)),
-                               color: getColorBasedOnUserPost(post, index),
+                               // color: getColorBasedOnUserPost(post, index),
                               ),
 
                               child: Column(
@@ -425,7 +427,9 @@ class _FriendsProfileState extends State<FriendsProfile> {
     print('users post called');
     post = await getPosts();
 
-    setState(() {});
+    setState(() {
+
+    });
   }
 
   Color getColorBasedOnUserPost(List<postfeed> post, int index) {

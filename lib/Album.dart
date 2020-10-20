@@ -25,8 +25,7 @@ class Album extends StatefulWidget {
 class _AlbumState extends State<Album> {
   List<AlbumImageViewModel> albums= new List();
 
-  String apiUrl = "https://jsonplaceholder.typicode.com/albums/1/photos";
-  int pageNo = 1;
+
   ScrollController _scrollController = ScrollController();
   bool isLoading = false;
 
@@ -75,7 +74,7 @@ class _AlbumState extends State<Album> {
       ),
     )
         : ListView.builder(
-      itemCount: albums.length + 1,
+      itemCount: 50,
       itemBuilder: (BuildContext context, int index) {
         if (index == albums.length) {
           return _buildProgressIndicator();

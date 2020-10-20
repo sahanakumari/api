@@ -36,3 +36,15 @@ Future<Map<String, dynamic>> delete(String endpoint) async {
     'body': data,
   };
 }
+
+Future<Map<String, dynamic>> put(String endpoint, Map<String,dynamic> body) async {
+  print(hostUrl + endpoint);
+  final response = await http.put(
+    hostUrl + endpoint,
+  );
+  final data = jsonDecode(response.body);
+  return {
+    'status_code': response.statusCode,
+    'body': data,
+  };
+}

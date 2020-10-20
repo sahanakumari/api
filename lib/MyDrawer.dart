@@ -4,19 +4,19 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:api/Profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Login.dart';
-import 'Post.dart';
+import 'Post.Feeddart';
 import 'main.dart';
 import 'model/User.dart';
 
 
 class MyDrawer extends StatefulWidget {
   final  User user;
-  final postfeed post;
-  final Address address;
 
 
 
-  MyDrawer({this.user, this.address,  this.post,});
+
+
+  MyDrawer({this.user, });
 
   @override
   _MyDrawerState createState() => _MyDrawerState();
@@ -26,8 +26,8 @@ class _MyDrawerState extends State<MyDrawer> {
   Storage stg=Storage();
   ///List<postfeed> post = new List();
   List<User> user = new List();
-  List<Address> address = new List();
 
+int index;
 
 
 
@@ -58,7 +58,7 @@ class _MyDrawerState extends State<MyDrawer> {
                   label: 'Post Feed',
                   icon: Icons.update,
                   ontap: () {
-                    Navigator.push(context,MaterialPageRoute(builder: (Context)=>Post(user: widget.user,post:widget.post)));
+                    Navigator.push(context,MaterialPageRoute(builder: (Context)=>Post(user: widget.user)));
                   },
                 ),
                 MenuOption(
@@ -78,7 +78,7 @@ class _MyDrawerState extends State<MyDrawer> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (Context) => Profile(user: widget.user,address: widget.user.address, post: widget.post,)));
+                            builder: (Context) => Profile(user: widget.user,)));
                   //  print('$user');
                   },
                 ),

@@ -19,10 +19,12 @@ import 'controller/post_controller.dart';
 class Post extends StatefulWidget {
   final User user;
   final postfeed post;
+  int userloginid;
+  int loginedUserId;
 
 
 
-  Post({Key key, this.title, this.user,this.post}) : super(key: key);
+  Post({Key key, this.title, this.user,this.post,this.loginedUserId,this.userloginid}) : super(key: key);
   final String title;
 
   @override
@@ -60,7 +62,7 @@ class _PostState extends State<Post> {
             "Post Feeds",
             textAlign: TextAlign.center,
           )),
-      drawer: MyDrawer(user: widget.user,post:widget.post),
+      drawer: MyDrawer(user: widget.user),
 
       body: Column(
         children: <Widget>[
@@ -94,7 +96,7 @@ class _PostState extends State<Post> {
                     ),
                     onTap: () {
                       //  Navigator.push(context,MaterialPageRoute(builder: (context)=> new SinglePostFeed()));
-                      print(post[index].userId);
+                     // print(post[index].userId);
                       final colorex=getColorBasedOnUserPost(post, index);
                       Navigator.push(
                         context,
@@ -104,6 +106,7 @@ class _PostState extends State<Post> {
                                 user: widget.user,
                                 post: post[index],
                                 colorex: colorex,
+                              userloginid: loginedUserId,
                            )),
                       );
                     },
@@ -139,7 +142,7 @@ class _PostState extends State<Post> {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     int userId = preferences.getInt("Id");
     loginedUserId = userId;
-    print('user id $userId');
+   // print('user id $userId');
   }
 
   Color getColorBasedOnUserPost(List<postfeed> post, int index) {
@@ -157,19 +160,7 @@ class _PostState extends State<Post> {
       }
     }
 
-  // Color getColorBasedOnUserPostExpectUser(List<postfeed> post, int index) {
-  //
-  //     ///friends post
-  //     if (post[index].userId == loginedUserId - 1 ||
-  //         post[index].userId == loginedUserId + 1) {
-  //       return Colors.yellow;
-  //     }
-  //     else
-  //       {
-  //       return Colors.red;
-  //     }
-  //
-  // }
+
 
 
   getPostLists() async {

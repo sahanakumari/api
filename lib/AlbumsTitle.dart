@@ -67,7 +67,7 @@ class _AlbumsState extends State<Albums> {
 //             height: 40.0,
             height: MediaQuery.of(context).size.height - 85,
             child: ListView.builder(
-                itemCount: album.length,
+                itemCount: 10,
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
                     child: Padding(

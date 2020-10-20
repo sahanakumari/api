@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:api/controller/user_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:api/Post.dart';
+import 'package:api/Post.Feeddart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,9 +14,7 @@ import 'model/User.dart';
 import 'model/postfeed.dart';
 
 class Login extends StatefulWidget {
-  final postfeed post;
 
-  const Login({Key key, this.post}) : super(key: key);
 
   @override
   _LoginState createState() => _LoginState();
@@ -24,9 +23,9 @@ class Login extends StatefulWidget {
 
 
 class _LoginState extends State<Login> {
-  List<postfeed> post = new List();
-
-  String id, password;
+  List<User> user = new List();
+  String  password;
+  int id;
   final _key = new GlobalKey<FormState>();
   bool _secureText = true;
   final myController = TextEditingController();
@@ -42,8 +41,8 @@ class _LoginState extends State<Login> {
     for(int i=0;i<users.length;i++){
       if(users[i].id.toString() == myController.text){
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => Post(user:users[i],post: post[i],)));
-        stg.saveUserLogin(i);
+            MaterialPageRoute(builder: (context) => Post(user:users[i])));
+        stg.saveUserLogin(users[i].id);
         loginToast("Logged In Successful");
 
       }
@@ -71,7 +70,7 @@ class _LoginState extends State<Login> {
     stg=Storage();
     super.initState();
     login();
-    getPostLists();
+
   }
 
   @override
@@ -219,14 +218,15 @@ class _LoginState extends State<Login> {
 
 
   }
-  getPostLists() async {
-    print('users post called');
-    post = await getPosts();
-
+ loginUser() async {
+    user = await getUser();
     setState(() {});
   }
 
 }
+
+
+
 
 loginToast(String toast) {
   return Fluttertoast.showToast(

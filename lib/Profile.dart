@@ -1,3 +1,4 @@
+import 'package:api/TodoTitles.dart';
 import 'package:api/model/postfeed.dart';
 import 'package:flutter/material.dart';
 
@@ -7,6 +8,8 @@ import 'FriendsProfile.dart';
 import 'MyDrawer.dart';
 import 'OtherPeople.dart';
 import 'controller/post_controller.dart';
+import 'controller/user_controller.dart';
+import 'model/Todos.dart';
 import 'model/User.dart';
 import 'model/User.dart';
 
@@ -14,13 +17,14 @@ import 'model/User.dart';
 class Profile extends StatefulWidget {
 
    final postfeed post;
+   final Todos todos;
   final User user;
 final Address address;
    int userloginid;
    int  loginedUserId;
 
 
-  Profile({this.user,this.address,this.post,this.userloginid,this.loginedUserId});
+  Profile({this.user,this.address,this.post,this.userloginid,this.loginedUserId,this.todos});
 
   @override
   _ProfileState createState() => _ProfileState();
@@ -31,7 +35,9 @@ class _ProfileState extends State<Profile> {
 
   List<User> user = new List();
   List<postfeed> post = new List();
+  List<Todos> todos = new List();
   int loginedUserId;
+  int index;
 
 
   @override
@@ -54,7 +60,7 @@ class _ProfileState extends State<Profile> {
             "Profile",
             textAlign: TextAlign.center,
           )),
-      drawer: MyDrawer(user: widget.user,post: widget.post),
+      drawer: MyDrawer(user: widget.user),
       //     body: Card(
       //       child: ListView(
       //         children: <Widget>[
@@ -325,7 +331,8 @@ class _ProfileState extends State<Profile> {
 
                     child: MaterialButton(
                       onPressed: () {
-                             Navigator.push(context, MaterialPageRoute(builder: (Context)=>  Friends()));
+
+                             Navigator.push(context, MaterialPageRoute(builder: (Context)=>Friends(user: widget.user,post: widget.post,userloginid:loginedUserId)));
                       },
                       color: Colors.white,
                       textColor: Colors.black,
@@ -358,6 +365,7 @@ class _ProfileState extends State<Profile> {
                     child: MaterialButton(
                       onPressed: () {
 
+   Navigator.push(context,MaterialPageRoute(builder: (context)=>TodoTitles(user: widget.user,post: widget.post,todos: widget.todos,)));
                       },
                       color: Colors.white,
                       textColor: Colors.black,
@@ -410,7 +418,7 @@ class _ProfileState extends State<Profile> {
                               decoration: BoxDecoration(
                                 borderRadius:
                                 BorderRadius.all(Radius.circular(10.0)),
-                                color: getColorBasedOnUserPost(post, index),
+                               // color: getColorBasedOnUserPost(post, index),
                               ),
 
                               child: Column(
@@ -444,7 +452,7 @@ class _ProfileState extends State<Profile> {
 
       ),
 
-
+      resizeToAvoidBottomPadding: false,
     );
   }
 
@@ -462,28 +470,19 @@ class _ProfileState extends State<Profile> {
   }
 
   Color getColorBasedOnUserPost(List<postfeed> post, int index) {
-    if (widget.post.userId == widget.user.id) {
+    if (post[index].userId == loginedUserId) {
       return Colors.lightBlueAccent;
-    }
-    else {
+    } else {
       ///friends post
-      if (widget.post.userId == widget.user.id - 1 ||
-          widget.post.userId == widget.user.id + 1) {
-        // Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //         builder: (Context) => FriendsProfile()));
-
+      if (post[index].userId == loginedUserId - 1 ||
+          post[index].userId == loginedUserId + 1) {
         return Colors.yellow;
       }
       else {
-        // Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //         builder: (Context) => OtherPeople()));
         return Colors.red;
       }
     }
   }
+
 }
 

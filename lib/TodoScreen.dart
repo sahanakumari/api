@@ -1,34 +1,64 @@
-import 'package:api/MyDrawer.dart';
+import 'dart:convert';
+
+import 'package:api/SinglePostFeed.dart';
+import 'package:api/TodoTitles.dart';
+import 'package:api/UpdateTodo.dart';
+
+import 'package:api/model/User.dart';
+import 'package:api/model/postfeed.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:api/Post.Feeddart';
+import 'controller/comments_controller.dart';
+import 'controller/todo_controller.dart';
+import 'model/Comments.dart';
 
-import 'controller/post_controller.dart';
-import 'model/postfeed.dart';
+import 'package:http/http.dart' as http;
 
-class NewPost extends StatefulWidget {
-  final postfeed post;
+import 'MyDrawer.dart';
+import 'model/Todos.dart';
 
-  const NewPost({Key key, this.post}) : super(key: key);
+class TodoScreen extends StatefulWidget {
+  final User user;
+ final  Todos todos;
+ final postfeed post;
 
+  TodoScreen({
+    this.todos,
+    this.user,
+    this.post,
+
+  });
 
   @override
-  _NewPostState createState() => _NewPostState();
+  _TodoScreen createState() => _TodoScreen();
+
 }
 
-class _NewPostState extends State<NewPost> {
+class _TodoScreen extends State<TodoScreen> {
+  List<User> user = new List();
+  List<postfeed> post = new List();
+  List<Todos> todos = new List();
+  TextEditingController textEditingController = new TextEditingController();
+  int  loginedUserId;
 
-  TextEditingController texttitlecontroller = new TextEditingController();
-  TextEditingController textbodycontroller = new TextEditingController();
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+  }
+
   @override
   Widget build(BuildContext context) {
+    // TODO: implement build
     return Scaffold(
         appBar: new AppBar(
-        title: Text(
-        "New Post",
-        style: TextStyle(color: Colors.white, fontSize: 18.0),
-    ),
-    centerTitle: true,
-    ),
+          title: Text(
+            "Todos",
+            style: TextStyle(color: Colors.white, fontSize: 18.0),
+          ),
+          centerTitle: true,
+        ),
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -37,33 +67,14 @@ class _NewPostState extends State<NewPost> {
                 padding: EdgeInsets.only(left: 15.0, right: 15.0, bottom: 8.0),
                 child: TextFormField(
                   keyboardType: TextInputType.multiline,
-                  maxLines: 2, controller: texttitlecontroller,
+                  maxLines: 7, controller: textEditingController,
                   textAlign: TextAlign.left,
                   //controller: titleController,
                   style: TextStyle(fontSize: 14.0, color: Colors.black),
                   onChanged: (value) {},
                   decoration: InputDecoration(
                     //labelText: constantStrings.additional_comments,
-                      hintText: "Add your Title here",
-                      labelStyle:
-                      TextStyle(fontSize: 14.0, color: Colors.black),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      )),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 15.0, right: 15.0, bottom: 8.0),
-                child: TextFormField(
-                  keyboardType: TextInputType.multiline,
-                  maxLines: 7, controller: textbodycontroller,
-                  textAlign: TextAlign.left,
-                  //controller: titleController,
-                  style: TextStyle(fontSize: 14.0, color: Colors.black),
-                  onChanged: (value) {},
-                  decoration: InputDecoration(
-                    //labelText: constantStrings.additional_comments,
-                      hintText: "Add your Body here",
+                      hintText: "Add your Todo  here",
                       labelStyle:
                       TextStyle(fontSize: 14.0, color: Colors.black),
                       border: OutlineInputBorder(
@@ -94,8 +105,13 @@ class _NewPostState extends State<NewPost> {
                                 ),
                               ),
                               onPressed: () {
-                             newPosts();
-                               Navigator.pop(context,'Post()');
+                                newTodoList();
+
+                                Navigator.pop(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (Context) =>
+                                            TodoTitles(user: widget.user,post: widget.post,todos: widget.todos)));
                               },
                             ),
                           )),
@@ -103,23 +119,25 @@ class _NewPostState extends State<NewPost> {
                   )),
             ],
           ),
-        )
+        ),
+      resizeToAvoidBottomPadding: false,
+
     );
   }
-
-
-  newPosts() async
+  newTodoList() async
   {
     final isSuccess=
-        await  newPost(widget.post,texttitlecontroller.text,textbodycontroller.text);
+    await  newTodoPost(widget.todos,textEditingController.text);
     print("$isSuccess");
     if (isSuccess) {
-      logoutToast('Sucessfully new post posted');
+      logoutToast('Sucessfully new Todo posted');
     } else {
       logoutToast('Failed to Post... try again');
     }
 
 
   }
+
+
 
 }

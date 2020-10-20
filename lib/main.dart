@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:api/SinglePostFeed.dart';
 import 'package:api/controller/post_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:api/Post.dart';
+import 'package:api/Post.Feeddart';
 import 'package:api/Login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'model/User.dart';
@@ -26,11 +26,11 @@ Future<void> main() async
     users.add(user);
   }
   int id=await s.getSaveUserId();
-  print("Id is : $id  length user ${users.length} length of post ${post.length} ");
+ // print("Id is : $id  length user ${users.length} length of post ${post.length} ");
 
   runApp(MaterialApp
     (debugShowCheckedModeBanner: false,
-      home:id==null && users.length> 0 ?Login():Post(user:users[id],post: post[id])
+      home:id==null && users.length>0?Login():Post(user:users[id])
      )
   );
 }
@@ -39,10 +39,10 @@ Future<void> main() async
 
 class Storage
 {
-  saveUserLogin(int i) async
+  saveUserLogin(int id) async
   {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setInt("Id",i);
+    preferences.setInt("Id",id);
   }
 
   Future<int> getSaveUserId() async
